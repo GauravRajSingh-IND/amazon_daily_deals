@@ -32,6 +32,6 @@ class API_FETCH:
             response = requests.get(self.whatsapp_url, headers=headers, params=querystring)
             response.raise_for_status()
 
-            return {"success":True, "response":response.text}
+            return {"success":True, "response":response.json()}
         except requests.RequestException as e:
             return {"success":False, "response":f"error: {e}"}
