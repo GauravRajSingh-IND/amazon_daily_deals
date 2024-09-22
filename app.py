@@ -26,7 +26,6 @@ class UI:
                                             command=self.get_user_data)
         self.button_signin.place(x=480, y=570)
 
-
     def get_user_data(self):
 
         # assign all the values to variables.
