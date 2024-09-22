@@ -1,10 +1,13 @@
 import tkinter
-from unicodedata import category
+
+from api import API_FETCH
 
 
 class UI:
 
     def __init__(self):
+
+        self.api = API_FETCH()
 
         self.window = tkinter.Tk()
         self.window.title("Amazon Australia Deals Newsletter")
@@ -31,7 +34,16 @@ class UI:
         # assign all the values to variables.
         username = self.username_input.get()
         email = self.email_input.get()
-        phone_number = self.number_input.get()
+        phone_number = int(self.number_input.get())
+
+        # validate whatsapp number.
+        on_whatsapp = self.api.validate_whatsapp(number=phone_number)
+
+        if not on_whatsapp["success"]:
+            return {"success":False, "response":"Error while validating whatsapp account, Please try again"}
+
+        if not on_whatsapp["success"]["response"]["valid"]:
+            return {"success": False, "response": "Whatsapp account not found, Please try again with valid whatsapp account."}
 
         try:
             deals_category:int = int(self.category_input.get())
@@ -89,3 +101,7 @@ class UI:
 
 app = UI()
 app.exit()
+
+"""
+{'success': True, 'response': '{"status":true,"valid":true,"wa_id":"61449932325","chat_link":"https://wa.me/61449932325"}'}
+"""
