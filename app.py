@@ -1,5 +1,4 @@
 import tkinter
-
 from api import API_FETCH
 
 
@@ -43,12 +42,12 @@ class UI:
 
         # validate whatsapp number.
         on_whatsapp = self.api.validate_whatsapp(number=phone_number)
-        print(on_whatsapp)
+        #print(on_whatsapp)
 
         if not on_whatsapp["success"]:
             return {"success":False, "response":"Error while validating whatsapp account, Please try again"}
 
-        if not on_whatsapp["success"]["response"]["valid"]:
+        if not on_whatsapp["response"]["valid"]:
             return {"success": False, "response": "Whatsapp account not found, Please try again with valid whatsapp account."}
 
         try:
@@ -62,7 +61,7 @@ class UI:
             return {"success":False, "response":"required field empty"}
 
         # add success message to canvas.
-        self.canvas.create_text(480, 600, text="Subscribed Successfully", font=('arial', 30, 'bold'), fill="snow",
+        self.canvas.create_text(400, 700, text="Subscribed Successfully", font=('arial', 30, 'bold'), fill="snow",
                                 anchor="w")
         return {email: {"username":username, "phone_number":phone_number, "category":deals_category, "number_deals":number_deals}}
 
@@ -107,10 +106,5 @@ class UI:
     def exit(self):
         self.window.mainloop()
 
-
 app = UI()
 app.exit()
-
-"""
-{'success': True, 'response': '{"status":true,"valid":true,"wa_id":"61449932325","chat_link":"https://wa.me/61449932325"}'}
-"""
