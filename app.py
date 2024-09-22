@@ -1,4 +1,6 @@
 import tkinter
+from unicodedata import category
+
 
 class UI:
 
@@ -20,9 +22,29 @@ class UI:
         self.input_signup()
 
         # Button - Add Customer.
-        self.button_signin = tkinter.Button(self.window, text= "Subscribe", font=('arial', 30, 'bold'), anchor= "center")
+        self.button_signin = tkinter.Button(self.window, text= "Subscribe", font=('arial', 30, 'bold'), anchor= "center",
+                                            command=self.get_user_data)
         self.button_signin.place(x=480, y=570)
 
+
+    def get_user_data(self):
+
+        # assign all the values to variables.
+        username = self.username_input.get()
+        email = self.email_input.get()
+        phone_number = self.number_input.get()
+
+        try:
+            deals_category:int = int(self.category_input.get())
+            number_deals:int = int(self.number_deals_input.get())
+        except ValueError:
+            return {"success": False, "response": "Please enter integers values for deals category and number of deals."}
+
+        # check if all variables are not None.
+        if not all([username, email, phone_number, deals_category, number_deals]):
+            return {"success":False, "response":"required field empty"}
+
+        return {email: {"username":username, "phone_number":phone_number, "category":deals_category, "number_deals":number_deals}}
 
     def labels_signup(self):
         # add text.
