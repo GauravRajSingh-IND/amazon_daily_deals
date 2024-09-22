@@ -54,6 +54,10 @@ class UI:
                                           foreground="gray20")
         self.number_input.place(x=400, y=320)
 
+        self.category_input = tkinter.Entry(self.window, background="snow", width=20, font=('arial', 30, 'bold'),
+                                          foreground="gray20")
+        self.category_input.place(x=400, y=390)
+
         self.number_deals_input = tkinter.Entry(self.window, background="snow", width=20, font=('arial', 30, 'bold'),
                                                 foreground="gray20")
         self.number_deals_input.place(x=400, y=460)
