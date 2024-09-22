@@ -30,6 +30,11 @@ class UI:
         self.button_signin.place(x=480, y=570)
 
     def get_user_data(self):
+        """
+        This function activates when user clicks on subscribe button. And get information from text field.
+        This function also validate the whatsapp number entered by user.
+        :return:
+        """
 
         # assign all the values to variables.
         username = self.username_input.get()
@@ -38,6 +43,7 @@ class UI:
 
         # validate whatsapp number.
         on_whatsapp = self.api.validate_whatsapp(number=phone_number)
+        print(on_whatsapp)
 
         if not on_whatsapp["success"]:
             return {"success":False, "response":"Error while validating whatsapp account, Please try again"}
@@ -55,6 +61,9 @@ class UI:
         if not all([username, email, phone_number, deals_category, number_deals]):
             return {"success":False, "response":"required field empty"}
 
+        # add success message to canvas.
+        self.canvas.create_text(480, 600, text="Subscribed Successfully", font=('arial', 30, 'bold'), fill="snow",
+                                anchor="w")
         return {email: {"username":username, "phone_number":phone_number, "category":deals_category, "number_deals":number_deals}}
 
     def labels_signup(self):
