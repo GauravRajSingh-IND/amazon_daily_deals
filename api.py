@@ -140,15 +140,3 @@ class SheetyUpdate:
 
         except requests.RequestException as e:
             return {"success": False, "response": f"error: {e}"}
-
-
-# test = SheetyUpdate()
-# response = test.check_customer(email="grsmanohar@gmail.com", phone_number=919414592948)
-# print(response)
-
-test = API_FETCH()
-response = test.fetch_deals(number_of_deals=10)
-print(response)
-
-
-
