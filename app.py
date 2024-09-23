@@ -1,6 +1,7 @@
 import tkinter
+from unicodedata import category
 
-from api import API_FETCH
+from api import API_FETCH, SheetyUpdate
 
 
 class UI:
@@ -8,6 +9,7 @@ class UI:
     def __init__(self):
 
         self.api = API_FETCH()
+        self.sheety = SheetyUpdate()
 
         self.window = tkinter.Tk()
         self.window.title("Amazon Australia Deals Newsletter")
@@ -54,6 +56,9 @@ class UI:
         # check if all variables are not None.
         if not all([username, email, phone_number, deals_category, number_deals]):
             return {"success":False, "response":"required field empty"}
+
+        # add user data to google sheet.
+        self.sheety.add_customer(email=email, username=username, phone_number=phone_number, category=deals_category, number_of_deals=number_deals)
 
         return {email: {"username":username, "phone_number":phone_number, "category":deals_category, "number_deals":number_deals}}
 
