@@ -1,6 +1,4 @@
 import tkinter
-from unicodedata import category
-
 from api import API_FETCH, SheetyUpdate
 
 
@@ -32,6 +30,11 @@ class UI:
         self.button_signin.place(x=480, y=570)
 
     def get_user_data(self):
+        """
+        This function activates when user clicks on subscribe button. And get information from text field.
+        This function also validate the whatsapp number entered by user.
+        :return:
+        """
 
         # assign all the values to variables.
         username = self.username_input.get()
@@ -42,15 +45,18 @@ class UI:
         on_whatsapp = self.api.validate_whatsapp(number=phone_number)
 
         if not on_whatsapp["success"]:
+            self.canvas.itemconfig(self.success_message, text="Server Error Try Again")
             return {"success":False, "response":"Error while validating whatsapp account, Please try again"}
 
-        if not on_whatsapp["success"]["response"]["valid"]:
+        if not on_whatsapp["response"]["valid"]:
+            self.canvas.itemconfig(self.success_message, text="Whatsapp Number Not Found")
             return {"success": False, "response": "Whatsapp account not found, Please try again with valid whatsapp account."}
 
         try:
             deals_category:int = int(self.category_input.get())
             number_deals:int = int(self.number_deals_input.get())
         except ValueError:
+            self.canvas.itemconfig(self.success_message, text="Error in required values")
             return {"success": False, "response": "Please enter integers values for deals category and number of deals."}
 
         # check if all variables are not None.
@@ -58,8 +64,11 @@ class UI:
             return {"success":False, "response":"required field empty"}
 
         # add user data to google sheet.
-        self.sheety.add_customer(email=email, username=username, phone_number=phone_number, category=deals_category, number_of_deals=number_deals)
+        self.sheety.add_customer(email=email, username=username, phone_number=phone_number, category=deals_category,
+                                 number_of_deals=number_deals)
 
+        # add success message to canvas.
+        self.canvas.itemconfig(self.success_message, text= "Subscribed")
         return {email: {"username":username, "phone_number":phone_number, "category":deals_category, "number_deals":number_deals}}
 
     def labels_signup(self):
@@ -76,7 +85,8 @@ class UI:
                                 anchor="w")
         self.canvas.create_text(200, 480, text="No. Deals : ", font=('arial', 30, 'bold'), fill="snow",
                                 anchor="w")
-
+        self.success_message = self.canvas.create_text(400, 700, text="", font=('arial', 30, 'bold'), fill="snow",
+                                anchor="w")
         self.canvas.place(x=0, y=0)
 
     def input_signup(self):
@@ -103,10 +113,5 @@ class UI:
     def exit(self):
         self.window.mainloop()
 
-
 app = UI()
 app.exit()
-
-"""
-{'success': True, 'response': '{"status":true,"valid":true,"wa_id":"61449932325","chat_link":"https://wa.me/61449932325"}'}
-"""
