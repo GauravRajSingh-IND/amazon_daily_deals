@@ -14,6 +14,10 @@ class API_FETCH:
         self.whatsapp_key = os.getenv('whatsapp_api_key')
         self.whatsapp_host = os.getenv('whatsapp_api_host')
 
+        self.amazon_url = os.getenv('amazon_url')
+        self.amazon_key = os.getenv('amazon_api_key')
+        self.amazon_host = os.getenv('amazon_api_host')
+
     def validate_whatsapp(self, number:int) -> dict:
         """
         This function takes number of the user and validate if user whatsapp number exist or not
@@ -36,6 +40,32 @@ class API_FETCH:
         except requests.RequestException as e:
             return {"success":False, "response":f"error: {e}"}
 
+    def fetch_deals(self, number_of_deals:int = 10) -> dict:
+        """
+        This function fetch real time data from amazon deals.
+        :param number_of_deals: number of deals required, default - top 10.
+        :return: dict object
+        """
+
+        headers = {
+            "x-rapidapi-key":self.amazon_key,
+            "x-rapidapi-host":self.amazon_host,
+        }
+
+        query_string = {
+                        "country":"US",
+                        "min_product_star_rating":"ALL",
+                        "price_range":"ALL",
+                        "discount_range":"ALL",
+                       }
+
+        try:
+            deals_data = requests.get(url=self.amazon_url, headers=headers, params=query_string)
+            deals_data.raise_for_status()
+            return {"success":True, "response":deals_data.json()}
+
+        except requests.RequestException as e:
+            return {"success":False, "response":f"Error {e.response.status_code} - {e.response.text}"}
 
 class SheetyUpdate:
 
@@ -115,3 +145,10 @@ class SheetyUpdate:
 # test = SheetyUpdate()
 # response = test.check_customer(email="grsmanohar@gmail.com", phone_number=919414592948)
 # print(response)
+
+test = API_FETCH()
+response = test.fetch_deals(number_of_deals=10)
+print(response)
+
+
+
