@@ -63,6 +63,11 @@ class UI:
         if not all([username, email, phone_number, deals_category, number_deals]):
             return {"success":False, "response":"required field empty"}
 
+        # check if customer exist or not.
+        is_new_customer= self.sheety.check_customer(email=email, phone_number=phone_number)
+        if not is_new_customer:
+            self.canvas.itemconfig(self.success_message, text="Customer already registered")
+
         # add user data to google sheet.
         self.sheety.add_customer(email=email, username=username, phone_number=phone_number, category=deals_category,
                                  number_of_deals=number_deals)
