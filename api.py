@@ -71,7 +71,47 @@ class SheetyUpdate:
         except requests.RequestException as e:
             return {"success": False, "response": f"error: {e}"}
 
+    def check_customer(self, email:str, phone_number:int):
+        """
+        This function check if the given customer already exist in the database or not.
+        :param email: email of the new customer
+        :param phone_number: phone number of the new customer.
+        :return: dictionary variable, response.
+        """
 
-test = SheetyUpdate()
-response = test.add_customer(email="Test@gmail.com", username= "grsmanohar",  phone_number=12345, category=1234, number_of_deals=10)
-print(response)
+        # check if username is not empty.
+        if not all([email, phone_number]):
+            return {"success": False, "response": "Please Enter email and phone number."}
+
+        header = {
+            "Authorization": f"Bearer {self.bear_token}"
+        }
+
+        try:
+            response = requests.get(url=self.end_point, headers=header)
+            response.raise_for_status()
+
+            # check if the user exist.
+            customers_data = response.json()['customer']
+
+            # loop over each customer value and check if email and phone number exist.
+            for customer in customers_data:
+                customer_email = customer['email']
+                customer_phone_number = customer['phonenumber']
+
+                # check if the phone number or email already exist.
+                if customer_email == email:
+                    return {"success": False, "response": f"Customer email already register."}
+
+                elif customer_phone_number == phone_number:
+                    return {"success": False, "response": f"Customer phone number already register."}
+
+            return {"success":True, "response":"Register Successfully."}
+
+        except requests.RequestException as e:
+            return {"success": False, "response": f"error: {e}"}
+
+
+# test = SheetyUpdate()
+# response = test.check_customer(email="grsmanohar@gmail.com", phone_number=919414592948)
+# print(response)
