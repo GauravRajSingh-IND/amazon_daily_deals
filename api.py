@@ -72,4 +72,6 @@ class SheetyUpdate:
             return {"success": False, "response": f"error: {e}"}
 
 
-
+test = SheetyUpdate()
+response = test.add_customer(email="Test@gmail.com", username= "grsmanohar",  phone_number=12345, category=1234, number_of_deals=10)
+print(response)
