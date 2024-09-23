@@ -41,6 +41,12 @@ class UI:
         email = self.email_input.get()
         phone_number = int(self.number_input.get())
 
+        # check if customer exist or not.
+        is_new_customer= self.sheety.check_customer(email=email, phone_number=phone_number)['success']
+        if not is_new_customer:
+            self.canvas.itemconfig(self.success_message, text="Customer already registered")
+            return {"success": False, "response": "Customer already exist."}
+
         # validate whatsapp number.
         on_whatsapp = self.api.validate_whatsapp(number=phone_number)
 
@@ -62,11 +68,6 @@ class UI:
         # check if all variables are not None.
         if not all([username, email, phone_number, deals_category, number_deals]):
             return {"success":False, "response":"required field empty"}
-
-        # check if customer exist or not.
-        is_new_customer= self.sheety.check_customer(email=email, phone_number=phone_number)
-        if not is_new_customer:
-            self.canvas.itemconfig(self.success_message, text="Customer already registered")
 
         # add user data to google sheet.
         self.sheety.add_customer(email=email, username=username, phone_number=phone_number, category=deals_category,
