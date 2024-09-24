@@ -1,6 +1,4 @@
-from datetime import datetime
-from api import API_FETCH
-
+from api import API_FETCH, SheetyUpdate
 
 def fetch_deals():
     """
@@ -44,4 +42,7 @@ def fetch_deals():
     else:
         return {"success": False, "response": "No Data"}
 
-
+# get customer data.
+customers_bd = SheetyUpdate()
+customers = customers_bd.get_subscriber()
+print(customers['response'])
