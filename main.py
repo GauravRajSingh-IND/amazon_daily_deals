@@ -22,7 +22,7 @@ def fetch_deals():
         for i,deal in enumerate(deals_data):
 
             # top 10 deals.
-            if deal['deal_state'] == 'AVAILABLE' and i <= 10:
+            if deal['deal_state'] == 'AVAILABLE' and i < 10:
                 deal_title = deal['deal_title']
                 deal_photo = deal['deal_photo']
                 deal_url = deal['deal_url']
