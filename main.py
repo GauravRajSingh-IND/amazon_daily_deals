@@ -1,6 +1,7 @@
-from matplotlib.pyplot import title
+from time import sleep
 
 from api import API_FETCH, SheetyUpdate
+from send_message import SendMessage
 
 def fetch_deals():
     """
@@ -52,22 +53,37 @@ def create_message(deal:dict, number:int) ->dict:
     :return: dict object containing product url, product image, message.
     """
 
-    # get name of the key
-    key = list(deal.keys())[0]
-    deal_data = deal[key]
-    body = f"{number}. 🛍️{deal_data['deal_title']}🛍️\n END_DATE: 🙅🏽{deal_data['deal_end_date_at']}🙅🏽\n Discount: 🤗{deal_data['discount']}🤗"
+    deal_data = deal
+    body = (f"{number+1}. 🛍️\n{deal_data['deal_title']}\n🛍️\n\n END_DATE: 🙅🏽{deal_data['deal_end_date_at']}🙅🏽\n\n Discount: 🤗{deal_data['discount']}🤗\n\n\n"
+            f"🔗🔗\n\n{deal_data['deal_url']}\n\n🔗🔗")
     url = deal_data['deal_url']
     image = deal_data['deal_photo']
     return {"product_url":url, "product_image":image, "message":body}
 
-# get customer data.
-# customers_bd = SheetyUpdate()
-# customers = customers_bd.get_subscriber()
-
 # get amazon deals data.
 deals = fetch_deals()
 
+# get customer data.
+customers_bd = SheetyUpdate()
+customers = customers_bd.get_subscriber()
+
+# create twilio object to send data.
+twilio = SendMessage()
 
 # loop over each customer and get customer id.
-# for customer in customers['response']['customer']:
-#     phone_number = f"+{customer['phonenumber']}"
+for customer in customers['response']['customer']:
+    phone_number = f"+{customer['phonenumber']}"
+
+    # loop over each deal fetched today.
+    for number, key in enumerate(deals['response']):
+
+        # get deal data.
+        deal = deals['response'][key]
+        message_body = create_message(deal=deal, number=number)
+
+        # send messages.
+        twilio.send_whatsapp_message(to_number=phone_number, media_url=message_body['product_image'], body=message_body['message'])
+
+
+
+
