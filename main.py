@@ -54,8 +54,13 @@ def create_message(deal:dict, number:int) ->dict:
     """
 
     deal_data = deal
-    body = (f"{number+1}. 🛍️\n{deal_data['deal_title']}\n🛍️\n\n END_DATE: 🙅🏽{deal_data['deal_end_date_at']}🙅🏽\n\n Discount: 🤗{deal_data['discount']}🤗\n\n\n"
-            f"🔗🔗\n\n{deal_data['deal_url']}\n\n🔗🔗")
+    body = (f"🌟 Deal #{number + 1} 🌟\n\n"
+            f"**Product:** {deal_data['deal_title']} 🛍️\n"
+            f"**End Date:** 🙅🏽 {deal_data['deal_end_date_at']} 🙅🏽\n"
+            f"**Discount:** 🤗 {deal_data['discount']}% 🤗\n\n"
+            f"🔗 Check it out here: {deal_data['deal_url']} 🔗\n\n"
+            f"Happy Shopping! 🛒✨")
+
     url = deal_data['deal_url']
     image = deal_data['deal_photo']
     return {"product_url":url, "product_image":image, "message":body}
