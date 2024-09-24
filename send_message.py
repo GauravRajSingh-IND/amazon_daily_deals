@@ -9,7 +9,6 @@ class SendMessage:
 
     def __init__(self):
 
-
         self.account_sid = os.getenv('twilio_account_sid')
         self.auth_token = os.getenv('twilio_auth_token')
         self.client = Client(self.account_sid, self.auth_token)

@@ -1,3 +1,5 @@
+from matplotlib.pyplot import title
+
 from api import API_FETCH, SheetyUpdate
 
 def fetch_deals():
@@ -42,7 +44,30 @@ def fetch_deals():
     else:
         return {"success": False, "response": "No Data"}
 
+def create_message(deal:dict, number:int) ->dict:
+    """
+    This function create a caption by using deals data
+    :param number: rank of deal from 1-10.
+    :param deal: deal from amazon fetched data
+    :return: dict object containing product url, product image, message.
+    """
+
+    # get name of the key
+    key = list(deal.keys())[0]
+    deal_data = deal[key]
+    body = f"{number}. 🛍️{deal_data['deal_title']}🛍️\n END_DATE: 🙅🏽{deal_data['deal_end_date_at']}🙅🏽\n Discount: 🤗{deal_data['discount']}🤗"
+    url = deal_data['deal_url']
+    image = deal_data['deal_photo']
+    return {"product_url":url, "product_image":image, "message":body}
+
 # get customer data.
-customers_bd = SheetyUpdate()
-customers = customers_bd.get_subscriber()
-print(customers['response'])
+# customers_bd = SheetyUpdate()
+# customers = customers_bd.get_subscriber()
+
+# get amazon deals data.
+deals = fetch_deals()
+
+
+# loop over each customer and get customer id.
+# for customer in customers['response']['customer']:
+#     phone_number = f"+{customer['phonenumber']}"
