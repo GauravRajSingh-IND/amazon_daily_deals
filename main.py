@@ -43,3 +43,5 @@ def fetch_deals():
 
     else:
         return {"success": False, "response": "No Data"}
+
+

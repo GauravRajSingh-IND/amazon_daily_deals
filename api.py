@@ -140,3 +140,23 @@ class SheetyUpdate:
 
         except requests.RequestException as e:
             return {"success": False, "response": f"error: {e}"}
+
+
+    def get_subscriber(self):
+        """
+        This function fetch the data of the subscriber and return it in a dictionary.
+        :return: dictionary.
+        """
+
+        header = {
+            "Authorization": f"Bearer {self.bear_token}"
+        }
+
+        try:
+            response = requests.get(url=self.end_point, headers=header)
+            response.raise_for_status()
+            return {"success":True, "response":response.json()}
+
+        except requests.RequestException as e:
+            return {"success": False, "response": f"error: {e}"}
+
